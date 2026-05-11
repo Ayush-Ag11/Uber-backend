@@ -14,7 +14,7 @@ public class Rider {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private Double rating;
 
