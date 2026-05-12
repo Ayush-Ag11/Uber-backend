@@ -12,6 +12,7 @@ import com.demo.project.uber.exceptions.ResourceNotFoundException;
 import com.demo.project.uber.repositories.DriverRepository;
 import com.demo.project.uber.services.DriverService;
 import com.demo.project.uber.services.PaymentService;
+import com.demo.project.uber.services.RatingService;
 import com.demo.project.uber.services.RideRequestService;
 import com.demo.project.uber.services.RideService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class DriverServiceImpl implements DriverService {
     private final RideService rideService;
     private final ModelMapper modelMapper;
     private final PaymentService paymentService;
+    private final RatingService ratingService;
 
     @Override
     public RideDto acceptRide(Long rideRequestId) {
@@ -97,6 +99,7 @@ public class DriverServiceImpl implements DriverService {
         ride.setStartedAt(LocalDateTime.now());
         Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ONGOING);
         paymentService.createNewPayment(savedRide);
+        ratingService.createNewRating(savedRide);
 
         return modelMapper.map(savedRide, RideDto.class);
     }
@@ -125,7 +128,19 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public RiderDto rateRider(Long rideId, Integer rating) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+        Driver driver = getCurrentDriver();
+
+        if (!driver.equals(ride.getDriver())) {
+            throw new RuntimeException("Driver cannot rate the rider as Driver is not owner of the ride with id: " + rideId);
+        }
+
+        if (!ride.getRideStatus().equals(RideStatus.ENDED)) {
+            throw new RuntimeException(
+                    "Rider cannot be rated as Ride status is not ENDED, ride Status : " + ride.getRideStatus());
+        }
+
+        return ratingService.rateRider(ride, rating);
     }
 
     @Override
