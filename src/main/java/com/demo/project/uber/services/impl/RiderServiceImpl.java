@@ -89,7 +89,7 @@ public class RiderServiceImpl implements RiderService {
     @Override
     public Page<RideDto> getAllMyRides(PageRequest pageRequest) {
         Rider rider = getCurrentRider();
-        return rideService.getAllRidesOfRider(rider.getId(), pageRequest).map(
+        return rideService.getAllRidesOfRider(rider, pageRequest).map(
                 ride -> modelMapper.map(ride, RideDto.class));
     }
 

@@ -254,3 +254,7 @@ INSERT INTO driver (id, user_id, rating, is_available, current_location) VALUES
                                                                              (48, 48, 4.9, true, ST_GeomFromText('POINT(77.5600 28.5200)', 4326)), -- Jewar Side
                                                                              (49, 49, 4.3, false, ST_GeomFromText('POINT(77.2300 28.6200)', 4326)), -- ITO
                                                                              (50, 50, 4.7, true, ST_GeomFromText('POINT(77.4000 28.5600)', 4326)); -- Noida Sector 18
+
+INSERT INTO wallet (id, user_id, balance) VALUES
+    (1, 1, 100),
+    (2,2,500);
