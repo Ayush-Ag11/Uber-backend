@@ -1,19 +1,15 @@
 package com.demo.project.uber.services.impl;
 
 import com.demo.project.uber.entities.WalletTransaction;
-import com.demo.project.uber.repositories.WalletRepository;
 import com.demo.project.uber.repositories.WalletTransactionRepository;
 import com.demo.project.uber.services.WalletTransactionService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class WalletTransactionServiceImpl implements WalletTransactionService {
 
-    private final WalletRepository walletRepository;
-    private final ModelMapper modelMapper;
     private final WalletTransactionRepository walletTransactionRepository;
 
     @Override

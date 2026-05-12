@@ -4,7 +4,11 @@ import com.demo.project.uber.dto.DriverDto;
 import com.demo.project.uber.dto.RideDto;
 import com.demo.project.uber.dto.RideRequestDto;
 import com.demo.project.uber.dto.RiderDto;
-import com.demo.project.uber.entities.*;
+import com.demo.project.uber.entities.Driver;
+import com.demo.project.uber.entities.Ride;
+import com.demo.project.uber.entities.RideRequest;
+import com.demo.project.uber.entities.Rider;
+import com.demo.project.uber.entities.User;
 import com.demo.project.uber.entities.enums.RideRequestStatus;
 import com.demo.project.uber.entities.enums.RideStatus;
 import com.demo.project.uber.exceptions.ResourceNotFoundException;
@@ -57,7 +61,7 @@ public class RiderServiceImpl implements RiderService {
 
     @Override
     public RideDto cancelRide(Long rideId) {
-        Rider  rider = getCurrentRider();
+        Rider rider = getCurrentRider();
         Ride ride = rideService.getRideById(rideId);
 
         if (!rider.equals(ride.getRider())) {

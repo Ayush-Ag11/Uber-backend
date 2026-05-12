@@ -12,6 +12,7 @@ import java.util.List;
 public class DistanceServiceOSRMImpl implements DistanceService {
 
     private static final String OSRM_API_BASE_URL = "https://router.project-osrm.org/route/v1/driving/";
+
     @Override
     public double calculateDistance(Point src, Point dest) {
 
@@ -27,13 +28,13 @@ public class DistanceServiceOSRMImpl implements DistanceService {
 
             return responseDto.getRoutes().get(0).getDistance() / 1000.0;
         } catch (Exception e) {
-            throw  new RuntimeException("Error getting distance from OSRM API "+e.getMessage());
+            throw new RuntimeException("Error getting distance from OSRM API " + e.getMessage());
         }
     }
 }
 
 @Data
-class OSRMResponseDto{
+class OSRMResponseDto {
     List<OSRMRoutes> routes;
 }
 

@@ -14,8 +14,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CashPaymentStrategy implements PaymentStrategy {
 
-    private final WalletService  walletService;
+    private final WalletService walletService;
     private final PaymentRepository paymentRepository;
+
     @Override
     public void processPayment(Payment payment) {
         Driver driver = payment.getRide().getDriver();

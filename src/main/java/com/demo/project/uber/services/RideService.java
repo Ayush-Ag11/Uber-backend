@@ -12,9 +12,9 @@ public interface RideService {
 
     Ride getRideById(long rideId);
 
-    Ride createNewRide(RideRequest rideRequest, Driver  driver);
+    Ride createNewRide(RideRequest rideRequest, Driver driver);
 
-    Ride updateRideStatus(Ride ride, RideStatus  rideStatus);
+    Ride updateRideStatus(Ride ride, RideStatus rideStatus);
 
     Page<Ride> getAllRidesOfRider(Rider rider, PageRequest pageRequest);
 

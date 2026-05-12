@@ -19,7 +19,7 @@ public interface RiderService {
 
     RiderDto getMyProfile();
 
-    Page<RideDto> getAllMyRides(PageRequest  pageRequest);
+    Page<RideDto> getAllMyRides(PageRequest pageRequest);
 
     Rider createNewRider(User user);
 

@@ -10,24 +10,24 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MapperConfig {
 
-        @Bean
-        public ModelMapper modelMapper() {
-                ModelMapper modelMapper = new ModelMapper();
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
 
-                modelMapper.typeMap(PointDto.class, Point.class).setConverter(converter ->{
-                        PointDto pointDto = converter.getSource();
-                        return GeometryUtil.createPoint(pointDto);
-                });
+        modelMapper.typeMap(PointDto.class, Point.class).setConverter(converter -> {
+            PointDto pointDto = converter.getSource();
+            return GeometryUtil.createPoint(pointDto);
+        });
 
-                modelMapper.typeMap(Point.class, PointDto.class).setConverter(context -> {
-                        Point point = context.getSource();
-                        Double coordinates[] = {
-                                point.getX(),
-                                point.getY()
-                        };
-                        return new PointDto(coordinates);
-                });
+        modelMapper.typeMap(Point.class, PointDto.class).setConverter(context -> {
+            Point point = context.getSource();
+            Double coordinates[] = {
+                    point.getX(),
+                    point.getY()
+            };
+            return new PointDto(coordinates);
+        });
 
-                return modelMapper;
-        }
+        return modelMapper;
+    }
 }

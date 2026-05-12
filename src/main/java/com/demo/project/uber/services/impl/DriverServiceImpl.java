@@ -39,7 +39,8 @@ public class DriverServiceImpl implements DriverService {
         RideRequest rideRequest = rideRequestService.getRideRequestById(rideRequestId);
 
         if (!rideRequest.getRideRequestStatus().equals(RideRequestStatus.PENDING)) {
-            throw new RuntimeException("RideRequestStatus cannot be accepted, status is " + rideRequest.getRideRequestStatus());
+            throw new RuntimeException(
+                    "RideRequestStatus cannot be accepted, status is " + rideRequest.getRideRequestStatus());
         }
 
         Driver currentDriver = getCurrentDriver();
@@ -63,7 +64,8 @@ public class DriverServiceImpl implements DriverService {
         }
 
         if (!ride.getRideStatus().equals(RideStatus.CONFIRMED)) {
-            throw new RuntimeException("Ride cannot be cancelled, invalid status : " + ride.getRideStatus());
+            throw new RuntimeException(
+                    "Ride cannot be cancelled, invalid status : " + ride.getRideStatus());
         }
 
         rideService.updateRideStatus(ride, RideStatus.CANCELLED);
@@ -83,7 +85,9 @@ public class DriverServiceImpl implements DriverService {
         }
 
         if (!ride.getRideStatus().equals(RideStatus.CONFIRMED)) {
-            throw new RuntimeException("Ride status is not CONFIRMED hence cannot be started, status is " + ride.getRideStatus());
+            throw new RuntimeException(
+                    "Ride status is not CONFIRMED hence cannot be started, status is "
+                            + ride.getRideStatus());
         }
 
         if (!otp.equals(ride.getOtp())) {
@@ -107,7 +111,8 @@ public class DriverServiceImpl implements DriverService {
         }
 
         if (!ride.getRideStatus().equals(RideStatus.ONGOING)) {
-            throw new RuntimeException("Ride status is not ONGOING hence cannot be ENDED, status is " + ride.getRideStatus());
+            throw new RuntimeException(
+                    "Ride status is not ONGOING hence cannot be ENDED, status is " + ride.getRideStatus());
         }
 
         ride.setEndedAt(LocalDateTime.now());
@@ -132,18 +137,27 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public Page<RideDto> getAllMyRides(PageRequest pageRequest) {
         Driver currentDriver = getCurrentDriver();
-        return rideService.getAllRidesOfDriver(currentDriver, pageRequest).map(ride -> modelMapper.map(ride, RideDto.class));
+        return rideService
+                .getAllRidesOfDriver(currentDriver, pageRequest)
+                .map(ride -> modelMapper.map(ride, RideDto.class));
     }
 
     @Override
     public Driver getCurrentDriver() {
-        return driverRepository.findById(2L).orElseThrow(() -> new ResourceNotFoundException("Driver not found with id " + 2));
+        return driverRepository
+                .findById(2L)
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not found with id " + 2));
     }
 
     @Override
     public Driver updateDriverAvailability(Driver driver, boolean available) {
 
         driver.setIsAvailable(available);
+        return driverRepository.save(driver);
+    }
+
+    @Override
+    public Driver createNewDriver(Driver driver) {
         return driverRepository.save(driver);
     }
 }
