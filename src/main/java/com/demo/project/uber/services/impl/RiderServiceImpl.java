@@ -12,6 +12,7 @@ import com.demo.project.uber.entities.User;
 import com.demo.project.uber.entities.enums.RideRequestStatus;
 import com.demo.project.uber.entities.enums.RideStatus;
 import com.demo.project.uber.exceptions.ResourceNotFoundException;
+import com.demo.project.uber.exceptions.UnauthorizedAccessException;
 import com.demo.project.uber.repositories.RideRequestRepository;
 import com.demo.project.uber.repositories.RiderRepository;
 import com.demo.project.uber.services.DriverService;
@@ -19,7 +20,7 @@ import com.demo.project.uber.services.RatingService;
 import com.demo.project.uber.services.RideService;
 import com.demo.project.uber.services.RiderService;
 import com.demo.project.uber.strategies.RideStrategyManager;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -54,12 +55,16 @@ public class RiderServiceImpl implements RiderService {
         Double fare = rideStrategyManager.rideFareStrategy().calculateFare(rideRequest);
         rideRequest.setFare(fare);
 
-        RideRequest SavedRideRequest = rideRequestRepository.save(rideRequest);
+        RideRequest savedRideRequest = rideRequestRepository.save(rideRequest);
 
         List<Driver> drivers = rideStrategyManager.driverMatchingStrategy(rider.getRating())
                 .findMatchingDrivers(rideRequest);
 
-        return modelMapper.map(SavedRideRequest, RideRequestDto.class);
+        log.info("Found {} drivers for ride request id: {}", drivers.size(), savedRideRequest.getId());
+
+        // TODO: notify matched drivers via push notification / WebSocket
+
+        return modelMapper.map(savedRideRequest, RideRequestDto.class);
     }
 
     @Override
@@ -68,7 +73,7 @@ public class RiderServiceImpl implements RiderService {
         Ride ride = rideService.getRideById(rideId);
 
         if (!rider.equals(ride.getRider())) {
-            throw new RuntimeException("Rider do not own this ride with id: " + rideId);
+            throw new UnauthorizedAccessException("Rider do not own this ride with id: " + rideId);
         }
 
         if (!ride.getRideStatus().equals(RideStatus.CONFIRMED)) {
@@ -88,7 +93,7 @@ public class RiderServiceImpl implements RiderService {
         Rider rider = getCurrentRider();
 
         if (!rider.equals(ride.getRider())) {
-            throw new RuntimeException("Rider do not own this ride with id: " + rideId);
+            throw new UnauthorizedAccessException("Rider do not own this ride with id: " + rideId);
         }
 
         if (!ride.getRideStatus().equals(RideStatus.ENDED)) {

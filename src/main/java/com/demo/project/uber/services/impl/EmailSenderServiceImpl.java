@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +17,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     private final JavaMailSender javaMailSender;
 
     @Override
+    @Async
     public void sendEmail(String toEmail, String subject, String body) {
 
         try{
@@ -32,6 +34,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     }
 
     @Override
+    @Async
     public void sendEmail(String[] toEmail, String subject, String body) {
         try{
             SimpleMailMessage message = new SimpleMailMessage();
@@ -39,8 +42,6 @@ public class EmailSenderServiceImpl implements EmailSenderService {
             message.setBcc(toEmail);
             message.setSubject(subject);
             message.setText(body);
-
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
             javaMailSender.send(message);
             log.info("Email sent successfully");

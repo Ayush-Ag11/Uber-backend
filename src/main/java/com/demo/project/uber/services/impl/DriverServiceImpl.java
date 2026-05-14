@@ -10,6 +10,7 @@ import com.demo.project.uber.entities.User;
 import com.demo.project.uber.entities.enums.RideRequestStatus;
 import com.demo.project.uber.entities.enums.RideStatus;
 import com.demo.project.uber.exceptions.ResourceNotFoundException;
+import com.demo.project.uber.exceptions.UnauthorizedAccessException;
 import com.demo.project.uber.repositories.DriverRepository;
 import com.demo.project.uber.services.DriverService;
 import com.demo.project.uber.services.PaymentService;
@@ -38,6 +39,7 @@ public class DriverServiceImpl implements DriverService {
     private final RatingService ratingService;
 
     @Override
+    @Transactional
     public RideDto acceptRide(Long rideRequestId) {
 
         RideRequest rideRequest = rideRequestService.getRideRequestById(rideRequestId);
@@ -64,7 +66,7 @@ public class DriverServiceImpl implements DriverService {
 
         Driver driver = getCurrentDriver();
         if (!driver.equals(ride.getDriver())) {
-            throw new RuntimeException("Driver cannot start the ride he has not accepted it earlier");
+            throw new UnauthorizedAccessException("Driver is not the owner of ride with id: " + rideId);
         }
 
         if (!ride.getRideStatus().equals(RideStatus.CONFIRMED)) {
@@ -80,12 +82,13 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
+    @Transactional
     public RideDto startRide(Long rideId, String otp) {
 
         Ride ride = rideService.getRideById(rideId);
         Driver driver = getCurrentDriver();
         if (!driver.equals(ride.getDriver())) {
-            throw new RuntimeException("Driver cannot start the ride he has not accepted it earlier");
+            throw new UnauthorizedAccessException("Driver is not the owner of ride with id: " + rideId);
         }
 
         if (!ride.getRideStatus().equals(RideStatus.CONFIRMED)) {
@@ -112,7 +115,7 @@ public class DriverServiceImpl implements DriverService {
         Ride ride = rideService.getRideById(rideId);
         Driver driver = getCurrentDriver();
         if (!driver.equals(ride.getDriver())) {
-            throw new RuntimeException("Driver cannot start the ride he has not accepted it earlier");
+            throw new UnauthorizedAccessException("Driver is not the owner of ride with id: " + rideId);
         }
 
         if (!ride.getRideStatus().equals(RideStatus.ONGOING)) {
@@ -166,7 +169,7 @@ public class DriverServiceImpl implements DriverService {
 
         return driverRepository
                 .findByUser(user)
-                .orElseThrow(() -> new ResourceNotFoundException("Driver not found with id " + 2));
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not found with id " + user.getId()));
     }
 
     @Override

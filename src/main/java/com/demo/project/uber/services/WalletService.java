@@ -11,7 +11,7 @@ public interface WalletService {
 
     Wallet deductMoneyFromWallet(User user, Double amount, String transactionId, Ride ride, TransactionMethod transactionMethod);
 
-    void withdrawAllMyMoneyFromWallet();
+    Wallet withdrawAllMyMoneyFromWallet(User user);
 
     Wallet findWalletById(Long walletId);
 
