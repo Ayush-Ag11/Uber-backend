@@ -6,10 +6,11 @@ import com.demo.project.uber.dto.UserDto;
 
 public interface AuthService {
 
-    String login(String username, String password);
+    String[] login(String email, String password);
 
     UserDto signUp(SignupDto signupDto);
 
     DriverDto onBoardNewDriver(Long userId, String vehicleId);
 
+    String refreshToken(String refreshToken);
 }

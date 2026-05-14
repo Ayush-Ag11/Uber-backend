@@ -6,6 +6,7 @@ import com.demo.project.uber.dto.RiderDto;
 import com.demo.project.uber.entities.Driver;
 import com.demo.project.uber.entities.Ride;
 import com.demo.project.uber.entities.RideRequest;
+import com.demo.project.uber.entities.User;
 import com.demo.project.uber.entities.enums.RideRequestStatus;
 import com.demo.project.uber.entities.enums.RideStatus;
 import com.demo.project.uber.exceptions.ResourceNotFoundException;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -159,8 +161,11 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public Driver getCurrentDriver() {
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         return driverRepository
-                .findById(2L)
+                .findByUser(user)
                 .orElseThrow(() -> new ResourceNotFoundException("Driver not found with id " + 2));
     }
 

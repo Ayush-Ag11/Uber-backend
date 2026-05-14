@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/drivers")
+@Secured("ROLE_DRIVER")
 public class DriverController {
 
     private final DriverService driverService;
@@ -64,10 +66,5 @@ public class DriverController {
         PageRequest pageRequest =
                 PageRequest.of(pageOffset, pageSize, Sort.by(Sort.Direction.DESC, "createdTime", "Id"));
         return ResponseEntity.ok(driverService.getAllMyRides(pageRequest));
-    }
-
-    @PostMapping("/rateRider/{rideId}/{rating}")
-    public ResponseEntity<RiderDto> rateRider(@PathVariable Long rideId, @PathVariable Integer rating) {
-        return ResponseEntity.ok(driverService.rateRider(rideId, rating));
     }
 }
