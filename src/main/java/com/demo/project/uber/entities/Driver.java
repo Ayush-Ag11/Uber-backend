@@ -21,7 +21,6 @@ import org.locationtech.jts.geom.Point;
 @Setter
 @Table(
         name = "driver",
-        schema = "uber",
         indexes = {@Index(name = "idx_driver_vehicleId", columnList = "vehicleId")})
 @NoArgsConstructor
 @AllArgsConstructor
