@@ -1,6 +1,6 @@
 package com.demo.project.uber.services.impl;
 
-import com.demo.project.uber.entities.ServiceCommunicationException;
+import com.demo.project.uber.exceptions.ServiceCommunicationException;
 import com.demo.project.uber.services.DistanceService;
 import lombok.Data;
 

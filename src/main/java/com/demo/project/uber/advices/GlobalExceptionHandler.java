@@ -1,6 +1,6 @@
 package com.demo.project.uber.advices;
 
-import com.demo.project.uber.entities.ServiceCommunicationException;
+import com.demo.project.uber.exceptions.ServiceCommunicationException;
 import com.demo.project.uber.exceptions.BadCredentialsException;
 import com.demo.project.uber.exceptions.InsufficientBalanceException;
 import com.demo.project.uber.exceptions.ResourceNotFoundException;

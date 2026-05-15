@@ -1,4 +1,4 @@
-package com.demo.project.uber.entities;
+package com.demo.project.uber.exceptions;
 
 public class ServiceCommunicationException extends RuntimeException {
 
