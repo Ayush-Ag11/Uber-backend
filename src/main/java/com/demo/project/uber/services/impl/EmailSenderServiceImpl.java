@@ -1,7 +1,6 @@
 package com.demo.project.uber.services.impl;
 
 import com.demo.project.uber.services.EmailSenderService;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
@@ -20,7 +19,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     @Async
     public void sendEmail(String toEmail, String subject, String body) {
 
-        try{
+        try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(toEmail);
             message.setSubject(subject);
@@ -28,7 +27,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
             javaMailSender.send(message);
             log.info("Email sent successfully");
-        } catch (Exception e){
+        } catch (Exception e) {
             log.info("Email sending failed, {}", e.getMessage());
         }
     }
@@ -36,7 +35,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     @Override
     @Async
     public void sendEmail(String[] toEmail, String subject, String body) {
-        try{
+        try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo("");
             message.setBcc(toEmail);
@@ -45,7 +44,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
             javaMailSender.send(message);
             log.info("Email sent successfully");
-        } catch (Exception e){
+        } catch (Exception e) {
             log.info("Email sending failed, {}", e.getMessage());
         }
     }

@@ -23,7 +23,7 @@ public class WalletController {
 
     @PostMapping("/withdraw")
     @Secured("ROLE_DRIVER")
-    public ResponseEntity<WalletDto> withdrawAllMyMoney(){
+    public ResponseEntity<WalletDto> withdrawAllMyMoney() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Wallet wallet = walletService.withdrawAllMyMoneyFromWallet(user);
         return ResponseEntity.ok(modelMapper.map(wallet, WalletDto.class));

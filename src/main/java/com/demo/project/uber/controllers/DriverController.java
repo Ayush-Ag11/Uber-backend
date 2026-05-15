@@ -6,6 +6,7 @@ import com.demo.project.uber.dto.RideDto;
 import com.demo.project.uber.dto.RideStartDto;
 import com.demo.project.uber.dto.RiderDto;
 import com.demo.project.uber.services.DriverService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,7 +36,7 @@ public class DriverController {
 
     @PostMapping("/startRide/{rideRequestId}")
     public ResponseEntity<RideDto> startRide(
-            @PathVariable long rideRequestId, @RequestBody RideStartDto rideStartDto) {
+            @PathVariable long rideRequestId, @Valid @RequestBody RideStartDto rideStartDto) {
         return ResponseEntity.ok(driverService.startRide(rideRequestId, rideStartDto.getOtp()));
     }
 
@@ -50,7 +51,7 @@ public class DriverController {
     }
 
     @PostMapping("/rateRider")
-    public ResponseEntity<RiderDto> rateRider(@RequestBody RatingDto ratingDto) {
+    public ResponseEntity<RiderDto> rateRider(@Valid @RequestBody RatingDto ratingDto) {
         return ResponseEntity.ok(driverService.rateRider(ratingDto.getRideId(), ratingDto.getRating()));
     }
 
@@ -64,7 +65,7 @@ public class DriverController {
             @RequestParam(defaultValue = "0") Integer pageOffset,
             @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
         PageRequest pageRequest =
-                PageRequest.of(pageOffset, pageSize, Sort.by(Sort.Direction.DESC, "createdTime", "Id"));
+                PageRequest.of(pageOffset, pageSize, Sort.by(Sort.Direction.DESC, "createdTime", "id"));
         return ResponseEntity.ok(driverService.getAllMyRides(pageRequest));
     }
 }

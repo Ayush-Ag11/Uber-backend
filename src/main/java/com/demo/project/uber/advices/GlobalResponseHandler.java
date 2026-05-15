@@ -23,13 +23,13 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
                                   Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   ServerHttpRequest request, ServerHttpResponse response) {
 
-        List<String> allowedRoutes = List.of("/v3/api-docs", "/actuators");
+        List<String> excludedRoutes = List.of("/v3/api-docs", "/manage");
 
-        boolean isAllowed = allowedRoutes
+        boolean isExcluded = excludedRoutes
                 .stream()
-                .anyMatch(allowedRoute -> request.getURI().getPath().contains(allowedRoute));
+                .anyMatch(allowedRoute -> request.getURI().getPath().startsWith(allowedRoute));
 
-        if (body instanceof ApiResponse<?> || isAllowed) {
+        if (body instanceof ApiResponse<?> || isExcluded) {
             return body;
         }
 

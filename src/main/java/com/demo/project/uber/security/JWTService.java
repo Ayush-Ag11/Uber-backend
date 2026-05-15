@@ -2,9 +2,12 @@ package com.demo.project.uber.security;
 
 import com.demo.project.uber.entities.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -42,13 +45,20 @@ public class JWTService {
     }
 
     public Long getUserIdFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(getSecretKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(getSecretKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
 
-        return Long.valueOf((claims.getSubject()));
+            return Long.valueOf(claims.getSubject());
+
+        } catch (ExpiredJwtException e) {
+            throw new AuthenticationServiceException("Token has expired, please login again");
+        } catch (JwtException e) {
+            throw new AuthenticationServiceException("Invalid token");
+        }
     }
 
 }

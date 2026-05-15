@@ -29,10 +29,6 @@ public class RatingServiceImpl implements RatingService {
     @Transactional
     public DriverDto rateDriver(Ride ride, Integer rating) {
 
-        if (rating == null || rating < 1 || rating > 5) {
-            throw new IllegalArgumentException("Rating must be between 1 and 5");
-        }
-
         Driver driver = ride.getDriver();
         Rating ratingObj = ratingRepository.findByRide(ride)
                 .orElseThrow(() -> new ResourceNotFoundException("Rating not found for ride with id " + ride.getId()));
@@ -55,10 +51,6 @@ public class RatingServiceImpl implements RatingService {
     @Override
     @Transactional
     public RiderDto rateRider(Ride ride, Integer rating) {
-
-        if (rating == null || rating < 1 || rating > 5) {
-            throw new IllegalArgumentException("Rating must be between 1 and 5");
-        }
 
         Rider rider = ride.getRider();
         Rating ratingObj = ratingRepository.findByRide(ride)

@@ -1,5 +1,6 @@
 package com.demo.project.uber.advices;
 
+import com.demo.project.uber.entities.ServiceCommunicationException;
 import com.demo.project.uber.exceptions.BadCredentialsException;
 import com.demo.project.uber.exceptions.InsufficientBalanceException;
 import com.demo.project.uber.exceptions.ResourceNotFoundException;
@@ -10,8 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -92,6 +96,31 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<?>> handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
         ApiError apiError = ApiError.builder()
                 .status(HttpStatus.FORBIDDEN)
+                .message(ex.getMessage())
+                .build();
+        return buildErrorResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<?>> handleValidationErrors(MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+
+        ApiError apiError = ApiError.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message(errorMessage)
+                .build();
+
+        return buildErrorResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(ServiceCommunicationException.class)
+    public ResponseEntity<ApiResponse<?>> handleServiceCommunicationException(ServiceCommunicationException ex) {
+        ApiError apiError = ApiError.builder()
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
                 .message(ex.getMessage())
                 .build();
         return buildErrorResponseEntity(apiError);
