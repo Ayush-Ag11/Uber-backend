@@ -42,8 +42,8 @@ logs/
 *.env
 
 # Sensitive Spring property files — never commit these
-application-local.properties
-application-prod.properties
+**/application-prod.properties
+**/application-local.properties
 application-secret.properties
 
 # OS files
