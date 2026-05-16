@@ -45,8 +45,6 @@ class RideFareCalculationStrategyTest {
         rideRequest.setDestinationLocation(destination);
     }
 
-    // --- Default fare strategy tests ---
-
     @Test
     void calculateFare_shouldReturnBaseFarePlusDistanceMultiplier() {
         // distance = 10km
@@ -81,16 +79,12 @@ class RideFareCalculationStrategyTest {
 
     @Test
     void calculateFare_shouldHandleLongDistance() {
-        // distance = 100km
-        // expected = 50 + (100 * 10) = 1050
         when(distanceService.calculateDistance(pickup, destination)).thenReturn(100.0);
 
         double fare = defaultFareStrategy.calculateFare(rideRequest);
 
         assertThat(fare).isEqualTo(1050.0);
     }
-
-    // --- Surge fare strategy tests ---
 
     @Test
     void surgeFare_shouldApplySurgeMultiplier() {

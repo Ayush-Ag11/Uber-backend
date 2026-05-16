@@ -52,8 +52,6 @@ class WalletServiceImplTest {
         wallet.setTransactions(new ArrayList<>());
     }
 
-    // --- addMoneyToWallet tests ---
-
     @Test
     void addMoneyToWallet_shouldIncreaseBalance() {
         when(walletRepository.findByUser(user)).thenReturn(Optional.of(wallet));
@@ -76,8 +74,6 @@ class WalletServiceImplTest {
 
         verify(walletTransactionService, times(1)).createNewWalletTransaction(any());
     }
-
-    // --- deductMoneyFromWallet tests ---
 
     @Test
     void deductMoneyFromWallet_shouldDecreaseBalance() {
@@ -126,8 +122,6 @@ class WalletServiceImplTest {
         assertThat(result.getBalance()).isEqualTo(0.0);
     }
 
-    // --- withdrawAllMyMoneyFromWallet tests ---
-
     @Test
     void withdrawAllMyMoney_shouldSetBalanceToZero() {
         when(walletRepository.findByUser(user)).thenReturn(Optional.of(wallet));
@@ -149,8 +143,6 @@ class WalletServiceImplTest {
                 .hasMessageContaining("Insufficient wallet balance.");
     }
 
-    // --- findByUser tests ---
-
     @Test
     void findByUser_shouldThrowException_whenWalletNotFound() {
         when(walletRepository.findByUser(user)).thenReturn(Optional.empty());
@@ -159,8 +151,6 @@ class WalletServiceImplTest {
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("wallet not found for user");
     }
-
-    // --- createNewWallet tests ---
 
     @Test
     void createNewWallet_shouldCreateWalletWithZeroBalance() {
